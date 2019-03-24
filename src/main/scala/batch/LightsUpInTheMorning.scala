@@ -4,6 +4,8 @@ import com.rabbitmq.client.{ConnectionFactory, Connection, Channel}
 
 object LightsUpInTheMorning extends App {
 
+  println(args);
+
   val QUEUE_NAME = "lights"
 
   val factory = new ConnectionFactory
