@@ -1,6 +1,5 @@
 package batch
 
-import batch.LightsUpInTheMorning.args
 import com.rabbitmq.client.{Channel, Connection, ConnectionFactory}
 
 /**
