@@ -8,6 +8,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "iot",
     libraryDependencies ++= Seq(
-      "com.rabbitmq" % "amqp-client" % "3.3.5"
+      "com.rabbitmq" % "amqp-client" % "3.3.5",
+      "org.json4s" %% "json4s-jackson" % "3.3.0"
     )
   )
