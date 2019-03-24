@@ -1,5 +1,6 @@
 package batch
 
+import org.joda.time.{DateTime, DateTimeZone}
 import com.rabbitmq.client.{Channel, Connection, ConnectionFactory}
 
 /**
@@ -10,7 +11,8 @@ object DeviceControlCommandQueuing extends App {
   val queueName = args(0)
   val deviceName = args(1)
   val command = args(2)
-  val datetime = "tY-%<tm-%<td %<tH:%<tM:%<tS" format new Date
+  val now = new DateTime
+  val datetime = now.toString("yyyy/MM/dd HH:mm:ss")
 
   val factory = new ConnectionFactory
   factory.setHost("localhost")
