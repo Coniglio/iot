@@ -5,7 +5,7 @@ import com.rabbitmq.client.{Channel, Connection, ConnectionFactory}
 /**
   * 機器制御用コマンドをキューイング
   */
-class DeviceControlCommandQueuing extends App {
+object DeviceControlCommandQueuing extends App {
 
   val queueName = args(0)
   val command = args(1)
