@@ -1,6 +1,8 @@
 package batch
 
-import org.joda.time.{DateTime, DateTimeZone}
+import java.text.SimpleDateFormat
+import java.util.{Calendar, Date}
+import play.api.libs.json.Json
 import com.rabbitmq.client.{Channel, Connection, ConnectionFactory}
 
 /**
@@ -11,8 +13,17 @@ object DeviceControlCommandQueuing extends App {
   val queueName = args(0)
   val deviceName = args(1)
   val command = args(2)
-  val now = new DateTime
-  val datetime = now.toString("yyyy/MM/dd HH:mm:ss")
+
+  val date = new Date
+  val dateFormat = "yyyy/MM/dd HH:mm:ss"
+  val simpleDateFormat = new SimpleDateFormat(dateFormat)
+
+  val json = Json.obj(
+    "datetime" -> simpleDateFormat.format(date),
+    "queueName" -> queueName,
+    "deviceName" -> deviceName,
+    "command" -> command
+  )
 
   val factory = new ConnectionFactory
   factory.setHost("localhost")
