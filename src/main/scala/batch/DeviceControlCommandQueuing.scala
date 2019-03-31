@@ -20,8 +20,8 @@ object DeviceControlCommandQueuing extends App {
 
   val json = Json.obj(
     "datetime" -> simpleDateFormat.format(date),
-    "queueName" -> queueName,
-    "deviceName" -> deviceName,
+    "queue_name" -> queueName,
+    "device_name" -> deviceName,
     "command" -> command
   )
 
