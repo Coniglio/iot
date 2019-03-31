@@ -31,7 +31,7 @@ object DeviceControlCommandQueuing extends App {
   val channel = connection.createChannel
 
   channel.queueDeclare(queueName, false, false, false, null)
-  channel.basicPublish("", queueName, null, json.getBytes)
+  channel.basicPublish("", queueName, null, json.toString.getBytes)
 
   channel.close
   connection.close
