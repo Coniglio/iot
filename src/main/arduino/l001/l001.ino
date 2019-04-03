@@ -84,6 +84,8 @@ void loop() {
         irsend.sendRaw(dark, sizeof(dark) / sizeof(dark[0]), khz);
         break;
     }
+
+    Serial.write(receiveByte);
   }
 
   delay(100);
