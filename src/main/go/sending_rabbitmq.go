@@ -55,39 +55,35 @@ func main() {
         // パラメータ取得
         param_device, param_queue, param_command, err := getParameters(context)
         if err != nil {
-            context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+            context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
             return
         }
 
 		url := fmt.Sprintf("amqp://%s:%s@%s:%s", config.Rabbitmq.User, config.Rabbitmq.Password, config.Rabbitmq.Host, config.Rabbitmq.Port)
 		conn, err := amqp.Dial(url)
 		if err != nil {
-			log.Printf("Dial Error: %s", err.Error())
-			context.String(500, err.Error())
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		defer conn.Close()
 
 		ch, err := conn.Channel()
 		if err != nil {
-			log.Printf("Cahnnel Error: %s", err.Error())
-			context.String(500, err.Error())
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		defer ch.Close()
 
 		q, err := ch.QueueDeclare("light", false, false, false, false, nil)
 		if err != nil {
-			log.Printf("Queue Declare Error: %s", err.Error())
-			context.String(500, err.Error())
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
 		// json形式のコマンド作成
         json_command, command, err := createCommand(param_queue, param_device, param_command)
 		if err != nil {
-			log.Printf("Json Marshal Error: %s", err.Error())
-			context.String(500, err.Error())
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -97,8 +93,7 @@ func main() {
 			Body:        []byte(json_command),
 		})
 		if err != nil {
-			log.Printf("Publish Error: %s", err.Error())
-			context.String(500, err.Error())
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -111,7 +106,7 @@ func getParameters(context *gin.Context) (string, string, string, error) {
     var json_param Param
     err := context.ShouldBindJSON(&json_param)
     if err != nil {
-        context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
     param_device := context.Param("device")
