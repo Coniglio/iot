@@ -106,8 +106,7 @@ func getParameters(context *gin.Context) (string, string, string, error) {
     var json_param Param
     err := context.ShouldBindJSON(&json_param)
     if err != nil {
-        context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
+        return "", "", "", err
     }
     param_device := context.Param("device")
     param_queue := context.Param("queue")
