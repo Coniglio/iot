@@ -53,6 +53,7 @@ func main() {
 	router.POST("api/v1/devices/:device/queues/:queue/", func(context *gin.Context) {
 
         context.Header("Access-Control-Allow-Origin", "*")
+        context.Header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
         // パラメータ取得
         param_device, param_queue, param_command, err := getParameters(context)
