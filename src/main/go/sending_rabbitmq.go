@@ -52,6 +52,8 @@ func main() {
 	router := gin.Default()
 	router.POST("api/v1/devices/:device/queues/:queue/", func(context *gin.Context) {
 
+        context.Header("Access-Control-Allow-Origin", "*")
+
         // パラメータ取得
         param_device, param_queue, param_command, err := getParameters(context)
         if err != nil {
