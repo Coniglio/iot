@@ -58,7 +58,7 @@ func main() {
         // パラメータ取得
         param_device, param_queue, param_command, err := getParameters(context)
         if err != nil {
-            log.log.Printf("get parameters error")
+            log.Printf("get parameters error")
             context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
             return
         }
@@ -66,7 +66,7 @@ func main() {
 		url := fmt.Sprintf("amqp://%s:%s@%s:%s", config.Rabbitmq.User, config.Rabbitmq.Password, config.Rabbitmq.Host, config.Rabbitmq.Port)
 		conn, err := amqp.Dial(url)
 		if err != nil {
-            log.log.Printf("amqp dial error")
+            log.Printf("amqp dial error")
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -74,7 +74,7 @@ func main() {
 
 		ch, err := conn.Channel()
 		if err != nil {
-            log.log.Printf("connection channel error")
+            log.Printf("connection channel error")
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -82,7 +82,7 @@ func main() {
 
 		q, err := ch.QueueDeclare("light", false, false, false, false, nil)
 		if err != nil {
-            log.log.Printf("channel queue declare error")
+            log.Printf("channel queue declare error")
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -90,7 +90,7 @@ func main() {
 		// json形式のコマンド作成
         json_command, command, err := createCommand(param_queue, param_device, param_command)
 		if err != nil {
-            log.log.Printf("create json error")
+            log.Printf("create json error")
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -101,7 +101,7 @@ func main() {
 			Body:        []byte(json_command),
 		})
 		if err != nil {
-            log.log.Printf("channel publish error")
+            log.Printf("channel publish error")
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
