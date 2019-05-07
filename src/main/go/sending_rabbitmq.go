@@ -58,35 +58,40 @@ func main() {
         // パラメータ取得
         param_device, param_queue, param_command, err := getParameters(context)
         if err != nil {
-            context.JSON(http.StatusInternalServerError, gin.H{"patameter error": err.Error()})
+            log.log.Printf("get parameters error")
+            context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
             return
         }
 
 		url := fmt.Sprintf("amqp://%s:%s@%s:%s", config.Rabbitmq.User, config.Rabbitmq.Password, config.Rabbitmq.Host, config.Rabbitmq.Port)
 		conn, err := amqp.Dial(url)
 		if err != nil {
-			context.JSON(http.StatusInternalServerError, gin.H{"dial error": err.Error()})
+            log.log.Printf("amqp dial error")
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		defer conn.Close()
 
 		ch, err := conn.Channel()
 		if err != nil {
-			context.JSON(http.StatusInternalServerError, gin.H{"channel error": err.Error()})
+            log.log.Printf("connection channel error")
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		defer ch.Close()
 
 		q, err := ch.QueueDeclare("light", false, false, false, false, nil)
 		if err != nil {
-			context.JSON(http.StatusInternalServerError, gin.H{"queue declare error": err.Error()})
+            log.log.Printf("channel queue declare error")
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
 		// json形式のコマンド作成
         json_command, command, err := createCommand(param_queue, param_device, param_command)
 		if err != nil {
-			context.JSON(http.StatusInternalServerError, gin.H{"json error": err.Error()})
+            log.log.Printf("create json error")
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -96,7 +101,8 @@ func main() {
 			Body:        []byte(json_command),
 		})
 		if err != nil {
-			context.JSON(http.StatusInternalServerError, gin.H{"enqueue error": err.Error()})
+            log.log.Printf("channel publish error")
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
